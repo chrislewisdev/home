@@ -1,4 +1,7 @@
-# About Me
-I'm a software developer living in Australia. Work-wise, I tend to find myself working in the land of full-stack development, typically using C# and React to build out product features for web-based systems. But really I'm interested in about any and all aspects of software development, and outside of work I'll just dabble in whatever takes my fancy.
+## About Me
 
-Truth be told, beyond that I'm not too sure what to tell you! But there's probably no better way to give you a feel for me as a person than just showing you some stuff that I've done or made. So check out a random selection of my showcase below, ranging from the new to the considerably not-new.
+I'm a software developer living in Australia who likes to build cool stuff, like this website (current iteration: static site built by a custom generator written in Rust, check out the [source code](http://google.com)). You could say my personal quest is to soak up as much knowledge and experience in tech as I can, whether it's building modern cloud-architected systems or dropping down into the low-level details of old gaming handhelds.
+
+## Contact
+
+You're always welcome to get in touch with me by shooting an email at: chris at lewis-hou.dev. :)

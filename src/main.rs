@@ -15,7 +15,6 @@ fn main() {
 
 fn cli(args: Vec<String>) -> anyhow::Result<()> {
     if args.get(1).is_some_and(|v| v == "clean") {
-        println!("Cleaning");
         clean()?;
     } else {
         generate()?;
