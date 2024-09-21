@@ -1,9 +1,11 @@
 use std::{
-    env, fs::{self}, path::{Path, PathBuf}
+    env,
+    fs::{self, DirEntry},
+    path::{Path, PathBuf},
 };
 
 use anyhow::Context;
-use pulldown_cmark::{html, Parser};
+use pulldown_cmark::Parser;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -35,23 +37,45 @@ fn generate() -> anyhow::Result<()> {
 
     let layout = fs::read_to_string("content/layout.html")?;
 
-    for entry in fs::read_dir("content")? {
-        let entry = entry?;
-        if entry.path().extension().is_some_and(|v| v == "md") {
-            let md = fs::read_to_string(entry.path())?;
-            let parser = Parser::new(md.as_str());
+    let build_path = PathBuf::from("build");
+    for entry in gather_md("content")? {
+        transform(entry, &build_path, &layout)?;
+    }
 
-            let mut htm = String::new();
-            html::push_html(&mut htm, parser);
-            
-            let rendered = layout.clone().replace("{{content}}", &htm);
-            let html_path = entry.path().with_extension("html");
-            let filename = html_path.file_name().context("")?;
-            fs::write(PathBuf::from("build").join(filename), rendered)?;
-        }
+    let posts_path = build_path.join("posts/");
+    fs::create_dir_all(&posts_path)?;
+    for entry in gather_md("content/posts")? {
+        transform(entry, &posts_path, &layout)?;
     }
 
     Ok(())
+}
+
+fn transform(entry: DirEntry, base_path: &PathBuf, layout: &String) -> anyhow::Result<()> {
+    let md = fs::read_to_string(entry.path())?;
+
+    let parser = Parser::new(md.as_str());
+    let mut html = String::new();
+    pulldown_cmark::html::push_html(&mut html, parser);
+
+    let rendered = layout.clone().replace("{{content}}", &html);
+    let html_path = entry.path().with_extension("html");
+    let filename = html_path.file_name().context("")?;
+    fs::write(base_path.join(filename), rendered)?;
+    
+    Ok(())
+}
+
+fn gather_md<P>(from: P) -> anyhow::Result<Vec<DirEntry>>
+where
+    P: AsRef<Path>,
+{
+    Ok(fs::read_dir(from)?
+        .filter_map(|result| result.ok())
+        .filter(|entry| {
+            entry.path().extension().is_some_and(|ext| ext == "md")
+        })
+        .collect::<Vec<_>>())
 }
 
 fn copy_assets<P>(from: P, to: PathBuf) -> anyhow::Result<()>
