@@ -1,7 +1,13 @@
-## About Me
+## > about
 
-I'm a software developer living in Australia who likes to build cool stuff, like this website (current iteration: static site built by a custom generator written in Rust, check out the [source code](http://google.com)). You could say my personal quest is to soak up as much knowledge and experience in tech as I can, whether it's building modern cloud-architected systems or dropping down into the low-level details of old gaming handhelds.
+Welcome to my home on the internet. It's hosted on a server inside my actual physical home, so if you're viewing this page right now, it means that all the 1s and 0s comprising this website have just travelled from my house to your device in the matter of an instant. Isn't that neat?
 
-## Contact
+I'm an Australian software developer who loves tech as a craft. I yearn to learn more about the entire ecosystem of technology, from distributed cloud architectures to low-level hardware programming. I have a particular fondness for handheld game consoles and have worked on small games for the Gameboy, Nintendo DS and the like.
+
+## > showcase
+
+## > blog
+
+## > contact
 
 You're always welcome to get in touch with me by shooting an email at: chris at lewis-hou.dev. :)

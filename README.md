@@ -1,0 +1,1 @@
+This is the source code for my home page on the internet. It's comprised of various Markdown files plus a custom static site generator that turns them all into the final HTML structure.
