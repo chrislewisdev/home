@@ -72,7 +72,7 @@ fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
 
-    let rendered = layout.clone().replace("{{content}}", &html);
+    let rendered = layout.clone().replace("{{ content }}", &html);
     fs::write(dest, rendered)?;
     
     Ok(())

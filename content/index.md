@@ -6,7 +6,11 @@ I'm an Australian software developer who loves tech as a craft. I yearn to learn
 
 ## > showcase
 
+{{ showcase }}
+
 ## > blog
+
+{{ blog }}
 
 ## > contact
 
