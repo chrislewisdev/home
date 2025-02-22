@@ -33,35 +33,41 @@ fn clean() -> anyhow::Result<()> {
 
 fn generate() -> anyhow::Result<()> {
     fs::create_dir_all("build/assets")?;
-    copy_assets("assets", PathBuf::from("build/assets"))?;
+    copy_files_recursive("assets", PathBuf::from("build/assets"))?;
 
     let layout = fs::read_to_string("content/layout.html")?;
 
     let build_path = PathBuf::from("build");
     for entry in gather_md("content")? {
-        transform(entry, &build_path, &layout)?;
+        let html_path = entry.path().with_extension("html");
+        let filename = html_path.file_name().context("")?;
+        
+        transform(entry, build_path.join(filename), &layout)?;
     }
 
     let posts_path = build_path.join("posts/");
-    fs::create_dir_all(&posts_path)?;
     for entry in gather_md("content/posts")? {
-        transform(entry, &posts_path, &layout)?;
+        let path = entry.path();
+        let stem = path.file_stem().context("Unable to extract file stem")?;
+        let post_path = posts_path.join(stem);
+        fs::create_dir_all(&post_path)?;
+        let dest = post_path.join("index.html");
+
+        transform(entry, dest, &layout)?;
     }
 
     Ok(())
 }
 
-fn transform(entry: DirEntry, base_path: &PathBuf, layout: &String) -> anyhow::Result<()> {
-    let md = fs::read_to_string(entry.path())?;
+fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result<()> {
+    let md = fs::read_to_string(source.path())?;
 
     let parser = Parser::new(md.as_str());
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
 
     let rendered = layout.clone().replace("{{content}}", &html);
-    let html_path = entry.path().with_extension("html");
-    let filename = html_path.file_name().context("")?;
-    fs::write(base_path.join(filename), rendered)?;
+    fs::write(dest, rendered)?;
     
     Ok(())
 }
@@ -78,7 +84,7 @@ where
         .collect::<Vec<_>>())
 }
 
-fn copy_assets<P>(from: P, to: PathBuf) -> anyhow::Result<()>
+fn copy_files_recursive<P>(from: P, to: PathBuf) -> anyhow::Result<()>
 where
     P: AsRef<Path>,
 {
@@ -91,7 +97,7 @@ where
         } else if file_type.is_dir() {
             let destination = to.join(entry.file_name());
             fs::create_dir_all(&destination)?;
-            copy_assets(entry.path(), destination)?;
+            copy_files_recursive(entry.path(), destination)?;
         }
     }
 
