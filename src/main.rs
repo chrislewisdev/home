@@ -41,22 +41,28 @@ fn generate() -> anyhow::Result<()> {
     for entry in gather_md("content")? {
         let html_path = entry.path().with_extension("html");
         let filename = html_path.file_name().context("")?;
-        
+
         transform(entry, build_path.join(filename), &layout)?;
     }
 
     let posts_path = build_path.join("posts/");
     for entry in gather_md("content/posts")? {
-        let path = entry.path();
-        let stem = path.file_stem().context("Unable to extract file stem")?;
-        let post_path = posts_path.join(stem);
+        let post_path = posts_path.join(get_post_stem(&entry)?);
         fs::create_dir_all(&post_path)?;
-        let dest = post_path.join("index.html");
-
-        transform(entry, dest, &layout)?;
+        
+        transform(entry, post_path.join("index.html"), &layout)?;
     }
 
     Ok(())
+}
+
+fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
+    let path = entry.path();
+    let stem = path.file_stem().context("Unable to extract file stem")?;
+    let stem_owned = stem.to_str().map(|s| s.to_string()).context("Unable to extract string from file stem")?;
+    let stem_trimmed = stem_owned.get(11..).context("Unable to trim date from post stem")?;
+
+    Ok(stem_trimmed.to_string())
 }
 
 fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result<()> {

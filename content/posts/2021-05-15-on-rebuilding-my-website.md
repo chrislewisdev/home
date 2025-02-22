@@ -50,8 +50,7 @@ Using Jekyll, the implementation process was mostly as straightforward as buildi
 
 I did have one funny moment when designing my home page actually: since I wanted to display a random showcase item on each load of the home page, I first reached for Jekyll's inbuilt `random` filter. But of course - since it's a static site - the entry was only randomised at build time and stayed the same from then on! In order to *actually* present a random item each time, I had no choice but to resort to Javascript. Ultimately, I needed to use Jekyll's templaying syntax to render out a Javascript array of each showcase entry as part of the page, and then insert it into the page after pageload, like so:
 
-{% highlight html %}
-{% raw %}
+```
 <script type="text/javascript">
 var showcaseItems = [
 {% for item in site.showcase_items %}
@@ -67,8 +66,7 @@ window.addEventListener('DOMContentLoaded', function() {
     document.getElementById('spotlight').innerHTML = `<h2>Random spotlight: ${spotlightItem.title}</h2><p>${spotlightItem.content}</p>`;
 });
 </script>
-{% endraw %}
-{% endhighlight %}
+```
 
 It's not exactly the prettiest solution, but it seems to work perfectly well.
 
