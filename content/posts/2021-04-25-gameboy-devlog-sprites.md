@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Gameboy Devlog&#58; Sprite Sizes
-description: Talking about my learnings after running my Gameboy game on real hardware for the first time.
+layout = "post"
+title = "Gameboy Devlog&#58; Sprite Sizes"
+description = "Talking about my learnings after running my Gameboy game on real hardware for the first time."
 ---
 
 I've recently been working on a game for the original Gameboy in my spare time, and after waiting a while for my Everdrive to arrive I was finally able to see some of my early code running on real-deal hardware! This devlog is going to cover my learnings from running it on the Gameboy for the first time and what I'll be doing about it moving forward.

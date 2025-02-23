@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Continuously Deploying Your Infrastructure&#58; How & Why
-description: A discussion of applying common CI practices to infrastructure-as-code
+layout = "post"
+title = "Continuously Deploying Your Infrastructure&#58; How & Why"
+description = "A discussion of applying common CI practices to infrastructure-as-code"
 ---
 
 *This post is based on my 10-minute lightning talk for Melbourne's DDD By Night of October 2017, with some more detail and discussion. If you're looking for the related code samples, they are located [here on GitHub](https://github.com/chrislewisdev/ddd-by-night-oct-2017).*

@@ -1,7 +1,7 @@
 ---
-layout: post
-title: DOMEjam retrospective
-description: Reflecting on a small game I developed for DOMEjam in 2020.
+layout = "post"
+title = "DOMEjam retrospective"
+description = "Reflecting on a small game I developed for DOMEjam in 2020."
 ---
 
 I don't often have time to participate in game jams, normally working on projects at my own slow pace, but when I recently saw [DOMEjam](https://itch.io/jam/domejam) announced it struck me as the perfect opportunity to try out a new game framework and learn a new programming language in a forgiving time limit (10 days - long enough that I don't need to rush, but short enough that it keeps me focused).

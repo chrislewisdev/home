@@ -1,7 +1,7 @@
 ---
-layout: post
-title: My Hacktoberfest 2018 Experience
-description: A post about my first time participating in Hacktoberfest.
+layout = "post"
+title = "My Hacktoberfest 2018 Experience"
+description = "A post about my first time participating in Hacktoberfest."
 ---
 
 ![](/assets/images/hacktoberfest/logo.png)

@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Building a 60% keyboard&#58; a DZ60 build guide
-description: A walkthrough of my very first time building a mechanical keyboard.
+layout = "post"
+title = "Building a 60% keyboard&#58; a DZ60 build guide"
+description = "A walkthrough of my very first time building a mechanical keyboard."
 ---
 
 ![My completed keyboard](/assets/images/dz60/complete.jpg)

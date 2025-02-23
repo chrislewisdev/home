@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Load Testing SNS & Lambda in AWS
-description: Lessons from running load tests against an SNS/Lambda integration in AWS.
+layout = "post"
+title = "Load Testing SNS & Lambda in AWS"
+description = "Lessons from running load tests against an SNS/Lambda integration in AWS."
 ---
 
 Recently at work we were building a system that needed to handle events coming from an upstream system with the capability for high burst throughput (e.g. going from zero messages to one million within a few seconds). The code itself was a good candidate for a Lambda, and the events we needed to listen to would be coming from an SNS topic. Conveniently, AWS offers a direct integration between SNS and Lambda so that you can process SNS messages in a Lambda without any additional infrastructure whatsoever. Sounds great, right?

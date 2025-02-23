@@ -1,7 +1,7 @@
 ---
-layout: post
-title: What It's Like To Work Through A Security Incident
-description: Recounting my experience of dealing with a security incident at my workplace
+layout = "post"
+title = "What It's Like To Work Through A Security Incident"
+description = "Recounting my experience of dealing with a security incident at my workplace"
 ---
 
 ![](/assets/images/security/alert.png)

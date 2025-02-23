@@ -1,7 +1,7 @@
 ---
-title: In search of a more personal internet
-description: About the state of discoverability of online content these days.
-layout: post
+title = "In search of a more personal internet"
+description = "About the state of discoverability of online content these days."
+layout = "post"
 ---
 
 *Disclaimer: the thoughts presented in this post might be a little haphazard, I'm pretty much just writing this down as it comes to me.*

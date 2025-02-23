@@ -1,7 +1,7 @@
 ---
-layout: post
-title: On Rebuilding My Website
-description: Discussing my motivations behind the latest rebuild of my site as well as my choice of tools for this iteration.
+layout = "post"
+title = "On Rebuilding My Website"
+description = "Discussing my motivations behind the latest rebuild of my site as well as my choice of tools for this iteration."
 ---
 
 Like most developers, every few years or so I'll decide it's high time to rebuild my personal website and give it a fresh new look. I thought I'd take a moment to talk about my motivations behind this current iteration of my site and my choice of tooling for the new build.

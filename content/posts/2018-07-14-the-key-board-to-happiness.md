@@ -1,7 +1,7 @@
 ---
-layout: post
-title: The key(board) to happiness
-description: A blog version of my lightning talk about keyboards.
+layout = "post"
+title = "The key(board) to happiness"
+description = "A blog version of my lightning talk about keyboards."
 ---
 
 *This post is a written version of my lightning talk of the same name. You can also [watch a recording of the talk on YouTube](https://youtu.be/9iKCUqLqCl8?t=580).*

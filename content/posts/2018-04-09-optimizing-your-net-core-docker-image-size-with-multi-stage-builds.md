@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Optimizing your .NET Core Docker image size with multi-stage builds
-description: An guide to minimising your .NET Core Docker image sizes.
+layout = "post"
+title = "Optimizing your .NET Core Docker image size with multi-stage builds"
+description = "An guide to minimising your .NET Core Docker image sizes."
 ---
 
 My team at work has only recently started to utilise Docker for running our applications in both development and production, and as I've become more familiar with it, I've been quick to notice the commonly large sizes for even simple application images. With disk space as plentiful as it is these days, this is rarely an issue. However, there are still some scenarios where the size of your Docker images can play a large role:

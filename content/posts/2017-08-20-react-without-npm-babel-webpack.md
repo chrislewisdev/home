@@ -1,7 +1,7 @@
 ---
-layout: post
-title: React without npm, Babel, or webpack
-description: A look at how to get started using React without all the requirements of package managers and bundlers.
+layout = "post"
+title = "React without npm, Babel, or webpack"
+description = "A look at how to get started using React without all the requirements of package managers and bundlers."
 ---
 
 *This 2017 blog post is a little out of date now, and in fact React now have their own getting started guide that does not require any build tooling: ["Add React to a Website"](https://reactjs.org/docs/add-react-to-a-website.html). That said, this post may still be useful for understanding how all these components relate in a React app, so feel free to give it a read anyway ;)*

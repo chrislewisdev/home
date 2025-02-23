@@ -6,12 +6,20 @@ use std::{
 
 use anyhow::Context;
 use pulldown_cmark::Parser;
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+struct FrontMatter {
+    title: Option<String>,
+    description: Option<String>,
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     if let Err(e) = cli(args) {
-        eprintln!("Error: {e}");
+        // e.
+        eprintln!("Error: {:#}", e);
     }
 }
 
@@ -66,9 +74,11 @@ fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
 }
 
 fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result<()> {
-    let md = fs::read_to_string(source.path())?;
+    let src = fs::read_to_string(source.path())?;
 
-    let parser = Parser::new(md.as_str());
+    let md = parse_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
+
+    let parser = Parser::new(md);
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
 
@@ -76,6 +86,24 @@ fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result
     fs::write(dest, rendered)?;
     
     Ok(())
+}
+
+fn parse_metadata<'a>(src: &'a str) -> anyhow::Result<&'a str> {
+    if !src.starts_with("---") {
+        return Ok(src);
+    }
+
+    let slices: Vec<&str> = src.splitn(3, "---").collect();
+    if slices.len() == 2 {
+        // There was no closing '---', so just return the whole string
+        return Ok(src);
+    }
+
+    let toml = slices.get(1).unwrap();
+    let front_matter: FrontMatter = toml::from_str(toml)?;
+    // TODO: Actually use this to generate post metadata
+
+    return Ok(slices.get(2).unwrap());
 }
 
 fn gather_md<P>(from: P) -> anyhow::Result<Vec<DirEntry>>

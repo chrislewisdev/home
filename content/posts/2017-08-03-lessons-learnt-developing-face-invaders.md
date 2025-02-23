@@ -1,6 +1,6 @@
 ---
-layout: post
-description: A small summary of lessons from developing a mobile game in Unity.
+layout = "post"
+description = "A small summary of lessons from developing a mobile game in Unity."
 ---
 
 _This is a post I actually wrote up 2 years ago when I was finishing up development on Face Invaders as part of Electric Mammoth. It may not be very relevant by now, but it seemed like a waste to just have it sitting around all that time for no reason- so here it is!_

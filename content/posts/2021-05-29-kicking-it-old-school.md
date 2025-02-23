@@ -1,7 +1,7 @@
 ---
-title: Kicking it old school
-description: Talking about my experience working on some software written in C using vim.
-layout: post
+title = "Kicking it old school"
+description = "Talking about my experience working on some software written in C using vim."
+layout = "post"
 ---
 
 Recently, I've been getting more and more interested in lower-level styles of programming. It began when I started researching how to develop Gameboy games, learning all about the old hardware and the assembly instructions that can be used to program for it. As I started working on a small Gameboy project, I took the time to learn a few new command-line skills that would help me out, such as how to use Make to organise the build system of the project, and using it to automatically rebuild everything whenever I make a change. Following that, I started having a read of [Crafting Interpreters](https://craftinginterpreters.com/) by Bob Nystrom and really enjoyed its introduction to programming language design and implementation (though I am still very early in the book). Feeling a little inspired, I decided to start writing a [REPL environment](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) for Gameboy assembly language in C, as yet another exercise in working without all the modern trappings I deal with in my typical work.
