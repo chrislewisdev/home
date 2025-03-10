@@ -1,7 +1,5 @@
 use std::{
-    env,
-    fs::{self, DirEntry},
-    path::{Path, PathBuf},
+    collections::HashMap, env, fs::{self, DirEntry}, path::{Path, PathBuf}
 };
 
 use anyhow::Context;
@@ -23,7 +21,6 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if let Err(e) = cli(args) {
-        // e.
         eprintln!("Error: {:#}", e);
     }
 }
@@ -49,21 +46,26 @@ fn generate() -> anyhow::Result<()> {
     copy_files_recursive("assets", PathBuf::from("build/assets"))?;
 
     let layout = fs::read_to_string("content/layout.html")?;
-
     let build_path = PathBuf::from("build");
-    for entry in gather_md("content")? {
-        let html_path = entry.path().with_extension("html");
-        let filename = html_path.file_name().context("")?;
-
-        transform(entry, build_path.join(filename), &layout)?;
-    }
-
+    let mut context: HashMap<&str, &String> = HashMap::new();
+    
+    let mut posts: Vec<PageMetadata> = Vec::new();
     let posts_path = build_path.join("posts/");
     for entry in gather_md("content/posts")? {
         let post_path = posts_path.join(get_post_stem(&entry)?);
         fs::create_dir_all(&post_path)?;
         
-        transform(entry, post_path.join("index.html"), &layout)?;
+        posts.push(transform(entry, post_path.join("index.html"), &layout, &context)?);
+    }
+
+    let directory = generate_blog_directory(&posts);
+    context.insert("{{ blog }}", &directory);
+
+    for entry in gather_md("content")? {
+        let html_path = entry.path().with_extension("html");
+        let filename = html_path.file_name().context("")?;
+
+        transform(entry, build_path.join(filename), &layout, &context)?;
     }
 
     Ok(())
@@ -78,22 +80,41 @@ fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
     Ok(stem_trimmed.to_string())
 }
 
-fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result<()> {
+fn transform(source: DirEntry, dest: PathBuf, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
     let src = fs::read_to_string(source.path())?;
 
     let (md, meta) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
 
-    let parser = Parser::new(md);
+    let mut subcontext: HashMap<&str, &String> = context.clone();
+    subcontext.insert("{{ title }}", &meta.title);
+
+    fs::write(dest, render(md, layout, &subcontext)?)?;
+    
+    Ok(meta)
+}
+
+fn render(markdown: &str, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<String> {
+    let parser = Parser::new(markdown);
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
 
-    let rendered = layout.clone()
-                    .replace("{{ title }}", &meta.title)
-                    .replace("{{ content }}", &html);
+    let mut rendered = layout.clone().replace("{{ content }}", &html);
 
-    fs::write(dest, rendered)?;
-    
-    Ok(())
+    for (key, value) in context {
+        rendered = rendered.replace(key, value);
+    }
+
+    Ok(rendered)
+}
+
+fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
+    let mut output = String::new();
+
+    for post in posts {
+        output.push_str(format!("<h3>{}</h3><p>{}</p>", post.title, post.description).as_str());
+    }
+
+    output
 }
 
 fn extract_metadata<'a>(src: &'a str) -> anyhow::Result<(&'a str, PageMetadata)> {
