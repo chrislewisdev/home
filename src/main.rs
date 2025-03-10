@@ -14,6 +14,11 @@ struct FrontMatter {
     description: Option<String>,
 }
 
+struct PageMetadata {
+    title: String,
+    description: String,
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -76,34 +81,43 @@ fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
 fn transform(source: DirEntry, dest: PathBuf, layout: &String) -> anyhow::Result<()> {
     let src = fs::read_to_string(source.path())?;
 
-    let md = parse_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
+    let (md, meta) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
 
     let parser = Parser::new(md);
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
 
-    let rendered = layout.clone().replace("{{ content }}", &html);
+    let rendered = layout.clone()
+                    .replace("{{ title }}", &meta.title)
+                    .replace("{{ content }}", &html);
+
     fs::write(dest, rendered)?;
     
     Ok(())
 }
 
-fn parse_metadata<'a>(src: &'a str) -> anyhow::Result<&'a str> {
+fn extract_metadata<'a>(src: &'a str) -> anyhow::Result<(&'a str, PageMetadata)> {
+    let mut meta = PageMetadata {
+        title: String::from(""),
+        description: String::from("")
+    };
+
     if !src.starts_with("---") {
-        return Ok(src);
+        return Ok((src, meta));
     }
 
     let slices: Vec<&str> = src.splitn(3, "---").collect();
     if slices.len() == 2 {
         // There was no closing '---', so just return the whole string
-        return Ok(src);
+        return Ok((src, meta));
     }
 
     let toml = slices.get(1).unwrap();
     let front_matter: FrontMatter = toml::from_str(toml)?;
-    // TODO: Actually use this to generate post metadata
+    meta.title = front_matter.title.unwrap_or_default();
+    meta.description = front_matter.description.unwrap_or_default();
 
-    return Ok(slices.get(2).unwrap());
+    return Ok((slices.get(2).unwrap(), meta));
 }
 
 fn gather_md<P>(from: P) -> anyhow::Result<Vec<DirEntry>>
