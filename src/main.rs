@@ -13,6 +13,7 @@ struct FrontMatter {
 }
 
 struct PageMetadata {
+    stem: String,
     title: String,
     description: String,
 }
@@ -52,10 +53,11 @@ fn generate() -> anyhow::Result<()> {
     let mut posts: Vec<PageMetadata> = Vec::new();
     let posts_path = build_path.join("posts/");
     for entry in gather_md("content/posts")? {
-        let post_path = posts_path.join(get_post_stem(&entry)?);
+        let stem = get_post_stem(&entry)?;
+        let post_path = posts_path.join(&stem);
         fs::create_dir_all(&post_path)?;
         
-        posts.push(transform(entry, post_path.join("index.html"), &layout, &context)?);
+        posts.push(transform(entry, post_path.join("index.html"), stem, &layout, &context)?);
     }
 
     let directory = generate_blog_directory(&posts);
@@ -65,7 +67,7 @@ fn generate() -> anyhow::Result<()> {
         let html_path = entry.path().with_extension("html");
         let filename = html_path.file_name().context("")?;
 
-        transform(entry, build_path.join(filename), &layout, &context)?;
+        transform(entry, build_path.join(filename), String::from("index"), &layout, &context)?;
     }
 
     Ok(())
@@ -80,10 +82,15 @@ fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
     Ok(stem_trimmed.to_string())
 }
 
-fn transform(source: DirEntry, dest: PathBuf, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
+fn transform(source: DirEntry, dest: PathBuf, stem: String, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
     let src = fs::read_to_string(source.path())?;
 
-    let (md, meta) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
+    let (md, front_matter) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
+    let meta = PageMetadata {
+        stem,
+        title: front_matter.title.unwrap_or_default(),
+        description: front_matter.description.unwrap_or_default(),
+    };
 
     let mut subcontext: HashMap<&str, &String> = context.clone();
     subcontext.insert("{{ title }}", &meta.title);
@@ -111,34 +118,33 @@ fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
     let mut output = String::new();
 
     for post in posts {
-        output.push_str(format!("<h3>{}</h3><p>{}</p>", post.title, post.description).as_str());
+        let url = format!("/posts/{}", post.stem);
+        output.push_str(format!("<a href=\"{}\"><h3>{}</h3></a><p>{}</p>", url, post.title, post.description).as_str());
     }
 
     output
 }
 
-fn extract_metadata<'a>(src: &'a str) -> anyhow::Result<(&'a str, PageMetadata)> {
-    let mut meta = PageMetadata {
-        title: String::from(""),
-        description: String::from("")
+fn extract_metadata<'a>(src: &'a str) -> anyhow::Result<(&'a str, FrontMatter)> {
+    let default_matter = FrontMatter {
+        title: Option::None,
+        description: Option::None
     };
 
     if !src.starts_with("---") {
-        return Ok((src, meta));
+        return Ok((src, default_matter));
     }
 
     let slices: Vec<&str> = src.splitn(3, "---").collect();
     if slices.len() == 2 {
         // There was no closing '---', so just return the whole string
-        return Ok((src, meta));
+        return Ok((src, default_matter));
     }
 
     let toml = slices.get(1).unwrap();
     let front_matter: FrontMatter = toml::from_str(toml)?;
-    meta.title = front_matter.title.unwrap_or_default();
-    meta.description = front_matter.description.unwrap_or_default();
 
-    return Ok((slices.get(2).unwrap(), meta));
+    return Ok((slices.get(2).unwrap(), front_matter));
 }
 
 fn gather_md<P>(from: P) -> anyhow::Result<Vec<DirEntry>>

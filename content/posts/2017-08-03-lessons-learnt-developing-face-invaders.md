@@ -1,5 +1,6 @@
 ---
 layout = "post"
+title = "Lessons learnt developing Face Invaders"
 description = "A small summary of lessons from developing a mobile game in Unity."
 ---
 
