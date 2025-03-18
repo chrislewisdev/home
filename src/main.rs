@@ -66,13 +66,20 @@ fn generate() -> anyhow::Result<()> {
 
     posts.sort_by(|a, b| b.date.cmp(&a.date));
     let directory = generate_blog_directory(&posts);
+    let recent_posts = generate_short_blog_directory(&posts, 4);
     context.insert("{{ blog }}", &directory);
+    context.insert("{{ recent_posts }}", &recent_posts);
 
     for entry in gather_md("content")? {
-        let html_path = entry.path().with_extension("html");
-        let filename = html_path.file_name().context("")?;
+        let stem = get_file_stem(&entry)?;
+        let page_path = if stem != "index" {
+            build_path.join(&stem)
+        } else {
+            build_path.clone()
+        };
+        fs::create_dir_all(&page_path)?;
 
-        transform(entry, build_path.join(filename), String::from("index"), Utc::now().date_naive(), &layout, &context)?;
+        transform(entry, page_path.join("index.html"), stem, Utc::now().date_naive(), &layout, &context)?;
     }
 
     Ok(())
@@ -146,10 +153,21 @@ fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
         // but Rust is making me painfully aware of the increased cost of that approach vs this.
         let post_year = post.date.year();
         if post_year != year_tracker {
-            output.push_str(format!("<h2>{}</h2>", post_year).as_str());
+            output.push_str(format!("<h2>&gt; {}</h2>", post_year).as_str());
             year_tracker = post_year;
         }
 
+        let url = format!("/posts/{}", post.stem);
+        output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
+    }
+
+    output
+}
+
+fn generate_short_blog_directory(posts: &Vec<PageMetadata>, count: usize) -> String {
+    let mut output = String::new();
+
+    for post in posts.iter().take(count) {
         let url = format!("/posts/{}", post.stem);
         output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
     }
