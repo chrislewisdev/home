@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.89"
+chrono = "0.4.40"
 pulldown-cmark = "0.12.1"
 serde = { version = "1.0.218", features = ["derive"] }
 toml = "0.8.20"

@@ -3,6 +3,7 @@ use std::{
 };
 
 use anyhow::Context;
+use chrono::{Datelike, NaiveDate, Utc};
 use pulldown_cmark::Parser;
 use serde::Deserialize;
 
@@ -14,6 +15,7 @@ struct FrontMatter {
 
 struct PageMetadata {
     stem: String,
+    date: NaiveDate,
     title: String,
     description: String,
 }
@@ -53,13 +55,16 @@ fn generate() -> anyhow::Result<()> {
     let mut posts: Vec<PageMetadata> = Vec::new();
     let posts_path = build_path.join("posts/");
     for entry in gather_md("content/posts")? {
-        let stem = get_post_stem(&entry)?;
+        let file_stem = get_file_stem(&entry)?;
+        let stem = get_post_stem(&file_stem)?;
+        let date = get_post_date(&file_stem)?;
         let post_path = posts_path.join(&stem);
         fs::create_dir_all(&post_path)?;
         
-        posts.push(transform(entry, post_path.join("index.html"), stem, &layout, &context)?);
+        posts.push(transform(entry, post_path.join("index.html"), stem, date, &layout, &context)?);
     }
 
+    posts.sort_by(|a, b| b.date.cmp(&a.date));
     let directory = generate_blog_directory(&posts);
     context.insert("{{ blog }}", &directory);
 
@@ -67,27 +72,43 @@ fn generate() -> anyhow::Result<()> {
         let html_path = entry.path().with_extension("html");
         let filename = html_path.file_name().context("")?;
 
-        transform(entry, build_path.join(filename), String::from("index"), &layout, &context)?;
+        transform(entry, build_path.join(filename), String::from("index"), Utc::now().date_naive(), &layout, &context)?;
     }
 
     Ok(())
 }
 
-fn get_post_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
+fn get_file_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
     let path = entry.path();
     let stem = path.file_stem().context("Unable to extract file stem")?;
     let stem_owned = stem.to_str().map(|s| s.to_string()).context("Unable to extract string from file stem")?;
-    let stem_trimmed = stem_owned.get(11..).context("Unable to trim date from post stem")?;
+
+    Ok(stem_owned)
+}
+
+fn get_post_stem(file_stem: &String) -> Result<String, anyhow::Error> {
+    let stem_trimmed = file_stem.get(11..).context("Unable to trim date from post stem")?;
 
     Ok(stem_trimmed.to_string())
 }
 
-fn transform(source: DirEntry, dest: PathBuf, stem: String, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
+fn get_post_date(file_stem: &String) -> Result<NaiveDate, anyhow::Error> {
+    let date_string = file_stem.get(0..11).context("Unable to extract date from post stem")?;
+    let date_parts: Vec<_> = date_string.split("-").collect();
+    let year = date_parts.get(0).context("Missing year in date")?.parse::<i32>()?;
+    let month = date_parts.get(1).context("Missing month in date")?.parse::<u32>()?;
+    let day = date_parts.get(2).context("Missing day in date")?.parse::<u32>()?;
+
+    NaiveDate::from_ymd_opt(year, month, day).context("Attempted to create invalid date")
+}
+
+fn transform(source: DirEntry, dest: PathBuf, stem: String, date: NaiveDate, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
     let src = fs::read_to_string(source.path())?;
 
     let (md, front_matter) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
     let meta = PageMetadata {
         stem,
+        date,
         title: front_matter.title.unwrap_or_default(),
         description: front_matter.description.unwrap_or_default(),
     };
@@ -116,10 +137,21 @@ fn render(markdown: &str, layout: &String, context: &HashMap<&str, &String>) -> 
 
 fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
     let mut output = String::new();
+    // Remind me to make this value bigger when I'm nearly 8000 years old :)
+    let mut year_tracker = 10000;
 
     for post in posts {
+        // Output a heading for every new year category
+        // I was originally going to solve this by sorting the posts into groups,
+        // but Rust is making me painfully aware of the increased cost of that approach vs this.
+        let post_year = post.date.year();
+        if post_year != year_tracker {
+            output.push_str(format!("<h2>{}</h2>", post_year).as_str());
+            year_tracker = post_year;
+        }
+
         let url = format!("/posts/{}", post.stem);
-        output.push_str(format!("<a href=\"{}\"><h3>{}</h3></a><p>{}</p>", url, post.title, post.description).as_str());
+        output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
     }
 
     output
