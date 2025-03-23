@@ -1,3 +1,6 @@
+- Add SCSS support or remove SCSS from stylesheet
+- Fix code sections in posts
+- Add theme selector
 - Support for showcase items
 - Support showcase page and short directory on home page
 - Deployment actions
