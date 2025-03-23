@@ -66,7 +66,7 @@ fn generate() -> anyhow::Result<()> {
 
     posts.sort_by(|a, b| b.date.cmp(&a.date));
     let directory = generate_blog_directory(&posts);
-    let recent_posts = generate_short_blog_directory(&posts, 4);
+    let recent_posts = generate_short_blog_directory(&posts, 3);
     context.insert("{{ blog }}", &directory);
     context.insert("{{ recent_posts }}", &recent_posts);
 

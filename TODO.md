@@ -1,5 +1,3 @@
-- Support for blog titles in front matter
-- Support blog page and short directory on home page
 - Support for showcase items
 - Support showcase page and short directory on home page
 - Deployment actions
