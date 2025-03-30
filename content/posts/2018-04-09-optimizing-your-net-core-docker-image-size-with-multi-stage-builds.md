@@ -18,21 +18,21 @@ For these reasons, I think it's still important to make the effort to keep your 
 
 If we want to try and optimise our image size, we should first know what our baseline is to compare against! To do this, let's just create a default .NET Core console application by running:
 
-{% highlight console%}
+```
 dotnet new console docker-size-test
-{% endhighlight %}
+```
 
 That should create a simple "Hello World" console application in a new `docker-size-test` directory. If you want, you can double-check that everything is working by running `dotnet run` in that directory before proceeding.
 
 Now, to set up our Docker image build for the application, create a new file called `Dockerfile` in the `docker-size-test` directory using your preferred text editor, containing the following:
 
-{% highlight docker %}
+```
 FROM microsoft/dotnet:2.0-sdk
 COPY . ./docker-size-test
 WORKDIR /docker-size-test/
 RUN dotnet build -c Release
 ENTRYPOINT ["dotnet", "run", "-c", "Release", "--no-build"]
-{% endhighlight %}
+```
 
 Since this is a fairly introductory article, I'll give a quick run-through of what all this means:
 
@@ -48,18 +48,18 @@ Since this is a fairly introductory article, I'll give a quick run-through of wh
 
 Now let's run the Docker build and name the image `docker-size-test` by running:
 
-{% highlight console %}
+```
 docker build -t docker-size-test .
-{% endhighlight %}
+```
 
 Once that's complete, you should be able to succesfully run the application using `docker run docker-size-test`.
 
 So, now that the image is built, let's take a look at how big it is! Running `docker image ls` should give us the details of the image we just built:
 
-{% highlight console %}
+```
 REPOSITORY       TAG     IMAGE ID      CREATED          SIZE
 docker-size-test latest  4dc5be081c0a  28 minutes ago   1.75GB
-{% endhighlight %}
+```
 
 That's a whole **1.75GB* image** for a Hello World application! Now, why might that be?
 
@@ -81,7 +81,7 @@ For more information on multi-stage builds, see the [Docker documentation](https
 
 To utilise multi-stage builds to reduce our image size, we can update our Dockerfile to match the following:
 
-{% highlight docker %}
+```
 FROM microsoft/dotnet:2.0-sdk AS build
 COPY . ./docker-size-test
 WORKDIR /docker-size-test/
@@ -90,7 +90,7 @@ RUN dotnet build -c Release -o output
 FROM microsoft/dotnet:2.0-runtime AS runtime
 COPY --from=build /docker-size-test/output .
 ENTRYPOINT ["dotnet", "docker-size-test.dll"]
-{% endhighlight %}
+```
 
 Going through the changes introduced here:
 
@@ -110,10 +110,10 @@ If you build your image again using `docker build -t docker-size-test .` and the
 
 Alright, now that we've built our new image using multi-stage builds, let's see how its size compares to before! Running `docker image ls` again reveals:
 
-{% highlight console %}
+```
 REPOSITORY        TAG      IMAGE ID      CREATED           SIZE
 docker-size-test  latest   b3a2d702b24a  17 minutes ago    219MB
-{% endhighlight %}
+```
 
 **219MB!** That's nearly 90% of the entire image size cut down right there! (Still sounds a little large for Hello World perhaps, but such is the world of containerisation)
 

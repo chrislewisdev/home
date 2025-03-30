@@ -32,15 +32,13 @@ The main two tools I'm aware of that support this are Terraform and CloudFormati
 
 To give you an idea what Infrastructure-as-Code looks like, here's a very small Terraform snippet:
 
-{% highlight terraform %}
-{% raw %}
+```terraform
 resource "aws_s3_bucket" "website_bucket" {
   bucket = "my_bucket_name"
   acl    = "public-read"
   policy = "${file("my-policy-file.json")}"
 }
-{% endraw %}
-{% endhighlight %}
+```
 
 Any Terraform file will contain descriptions for a number of [resources](https://www.terraform.io/docs/configuration/resources.html), such as an AWS S3 bucket in this example. Each resource will hold multiple attributes detailing how it should be set up, for example an appropriate name for your S3 bucket.
 
@@ -84,8 +82,7 @@ To do this, I used [Travis CI](https://docs.travis-ci.com/) because it integrate
 
 The first step was to set up my Terraform config to create the S3 bucket and configure it for website hosting. That's accomplished by the following code:
 
-{% highlight terraform %}
-{% raw %}
+```terraform
 provider "aws" {
   region = "ap-southeast-2"
 }
@@ -130,8 +127,7 @@ resource "aws_s3_bucket" "website_bucket" {
 output "website_url" {
   value = "${aws_s3_bucket.website_bucket.website_endpoint}"
 }
-{% endraw %}
-{% endhighlight %}
+```
 
 If you'd like more information on what each part of this file means, feel free to consult the [Terraform documentation](https://www.terraform.io/docs/index.html).
 
@@ -139,7 +135,7 @@ I will however point out the importance of the [backend configuration](https://w
 
 Now, to actually roll out this Terraform config and deploy our site to S3, we require the following Travis configuration:
 
-{% highlight yaml %}
+```yaml
 notifications:
   email: false
 
@@ -171,7 +167,7 @@ deploy:
   local_dir: website
   on:
     branch: master
-{% endhighlight %}
+```
 
 This Travis script outlines the 4 major steps that make this entire setup work:
 

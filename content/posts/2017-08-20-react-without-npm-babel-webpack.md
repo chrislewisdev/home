@@ -24,8 +24,7 @@ Now don't get me wrong, those are all good tools to use, but that's a lot of thi
 
 Let's look at how we can avoid the need for all of these things by converting [this CodePen sample](https://codepen.io/anon/pen/brvpjG?editors=0010) into something we can run in a plain HTML file:
 
-{% highlight jsx %}
-{% raw %}
+```jsx
 class Greetings extends React.Component
 {
   render()
@@ -40,8 +39,7 @@ ReactDOM.render(
   <Greetings name="Chris" />,
   document.getElementById('root')
 );
-{% endraw %}
-{% endhighlight %}
+```
 
 *Note: I won't be explaining how React actually works in this post, just how to translate from most React samples into easily runnable code. If you want to know how this sample actually works, consult the [Quick Start Guide](https://facebook.github.io/react/docs/hello-world.html) for React.*
 
@@ -49,12 +47,10 @@ ReactDOM.render(
 
 In order to avoid setting up npm for the sake of a *single file*, we can reference a CDN for the two main React libraries, react and react-dom:
 
-{% highlight html %}
-{% raw %}
+```html
 <script src="https://unpkg.com/react@15/dist/react.js"></script>
 <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
-{% endraw %}
-{% endhighlight %}
+```
 
 Alternatively, you can manually save those two JS files into your workspace and reference them locally. (it's no big concern for a sample file, but I did on one occasion find the CDN had been updated with a broken file, which broke my sample project)
 
@@ -66,23 +62,19 @@ Since all our work will be in a single file, we won't run into any need for webp
 
 This is where we'll actually have to make some modifications to the JS code to get it running. Most React samples use JSX, aka the bits that mix in HTML syntax inside JavaScript:
 
-{% highlight jsx %}
-{% raw %}
+```jsx
 return (
   <h1>Greetings, {this.props.name}!</h1>
 );
-{% endraw %}
-{% endhighlight %}
+```
 
 If you try and run anything like that locally, you'll just get a boring old syntax error message in your console.
 
 However, that JSX code is actually just syntactic sugar for the following:
 
-{% highlight javascript %}
-{% raw %}
+```javascript
 return React.createElement('h1', null, 'Greetings, ' + this.props.name + '!');
-{% endraw %}
-{% endhighlight %}
+```
 
 Any JSX block can be converted into a call to React.createElement with three arguments:
 
@@ -94,19 +86,15 @@ Any JSX block can be converted into a call to React.createElement with three arg
 
 And that's it! So, as for the other JSX block in our code:
 
-{% highlight jsx %}
-{% raw %}
+```html
 <Greetings name="Chris" />
-{% endraw %}
-{% endhighlight %}
+```
 
 This can just be expressed as:
 
-{% highlight javascript %}
-{% raw %}
+```javascript
 React.createElement(Greetings, { name : 'Chris' })
-{% endraw %}
-{% endhighlight %}
+```
 
 This time we are actually providing some properties to the element, and since we don't need to give it any child elements, we're omitting the third parameter altogether.
 
@@ -114,8 +102,7 @@ This time we are actually providing some properties to the element, and since we
 
 That's honestly all it takes to get React working without all the guff of package managers and build systems. All together, it looks like this:
 
-{% highlight html %}
-{% raw %}
+```html
 <html>
   <head>
     <title>React Hello World</title>
@@ -144,8 +131,7 @@ That's honestly all it takes to get React working without all the guff of packag
     </script>
   </body>
 </html>
-{% endraw %}
-{% endhighlight %}
+```
 
 Give that a shot on your local machine and it should work right out of the box!
 
@@ -157,15 +143,13 @@ That should be all the setup you need to start toying with React examples whilst
 
 As I mentioned earlier, you can provide as many children to an element created with React.createElement as you like. Suppose instead of one Greeting you wanted to nest multiple Greetings within a div tag:
 
-{% highlight javascript %}
-{% raw %}
+```javascript
 React.createElement('div', null,
   React.createElement(Greetings, { name : 'Chris' }),
   React.createElement(Greetings, { name : 'Ming' }),
   React.createElement(Greetings, { name : 'Joe' })
 )
-{% endraw %}
-{% endhighlight %}
+```
 
 Simple! And honestly not too ugly if you space out the function calls sensibly.
 
@@ -179,8 +163,7 @@ The React website has a ["Create a new React App"](https://reactjs.org/docs/crea
 
 The above examples should work fine in any modern browser, but if you're conscious of avoiding all potentially-unsupported ES6 code including classes, you can just replace the definition of "Greetings" with the following:
 
-{% highlight javascript %}
-{% raw %}
+```javascript
 var Greetings = React.createClass(
 {
   render: function ()
@@ -188,8 +171,7 @@ var Greetings = React.createClass(
     return React.createElement('h1', null, 'Greetings, ' + this.props.name + '!');
   }
 });
-{% endraw %}
-{% endhighlight %}
+```
 
 React seems to be discouraging the use of React.createClass for the future, but for now you can use it to define React components with object definitions instead of straight-up classes.
 
