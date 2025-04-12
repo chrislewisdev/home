@@ -65,10 +65,28 @@ fn generate() -> anyhow::Result<()> {
     }
 
     posts.sort_by(|a, b| b.date.cmp(&a.date));
-    let directory = generate_blog_directory(&posts);
-    let recent_posts = generate_short_blog_directory(&posts, 3);
-    context.insert("{{ blog }}", &directory);
+    let blog_directory = generate_blog_directory(&posts, "posts");
+    let recent_posts = generate_short_blog_directory(&posts, "posts", 3);
+    context.insert("{{ blog }}", &blog_directory);
     context.insert("{{ recent_posts }}", &recent_posts);
+
+    let mut projects: Vec<PageMetadata> = Vec::new();
+    let projects_path = build_path.join("projects/");
+    for entry in gather_md("content/projects")? {
+        let file_stem = get_file_stem(&entry)?;
+        let stem = get_post_stem(&file_stem)?;
+        let date = get_post_date(&file_stem)?;
+        let project_path = projects_path.join(&stem);
+        fs::create_dir_all(&project_path)?;
+        
+        projects.push(transform(entry, project_path.join("index.html"), stem, date, &layout, &context)?);
+    }
+
+    projects.sort_by(|a, b| b.date.cmp(&a.date));
+    let projects_directory = generate_blog_directory(&projects, "projects");
+    let recent_projects = generate_short_blog_directory(&projects, "projects", 3);
+    context.insert("{{ showcase }}", &projects_directory);
+    context.insert("{{ recent_projects }}", &recent_projects);
 
     for entry in gather_md("content")? {
         let stem = get_file_stem(&entry)?;
@@ -142,7 +160,7 @@ fn render(markdown: &str, layout: &String, context: &HashMap<&str, &String>) -> 
     Ok(rendered)
 }
 
-fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
+fn generate_blog_directory(posts: &Vec<PageMetadata>, base_url: &str) -> String {
     let mut output = String::new();
     // Remind me to make this value bigger when I'm nearly 8000 years old :)
     let mut year_tracker = 10000;
@@ -157,18 +175,18 @@ fn generate_blog_directory(posts: &Vec<PageMetadata>) -> String {
             year_tracker = post_year;
         }
 
-        let url = format!("/posts/{}", post.stem);
+        let url = format!("/{base_url}/{}", post.stem);
         output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
     }
 
     output
 }
 
-fn generate_short_blog_directory(posts: &Vec<PageMetadata>, count: usize) -> String {
+fn generate_short_blog_directory(posts: &Vec<PageMetadata>, base_url: &str, count: usize) -> String {
     let mut output = String::new();
 
     for post in posts.iter().take(count) {
-        let url = format!("/posts/{}", post.stem);
+        let url = format!("/{base_url}/{}", post.stem);
         output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
     }
 

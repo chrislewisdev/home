@@ -4,9 +4,9 @@ Welcome to my home on the internet. It's hosted on a server inside my actual phy
 
 I'm an Australian software developer who loves tech as a craft. I yearn to learn more about the entire ecosystem of technology, from distributed cloud architectures to low-level hardware programming. I have a particular fondness for handheld game consoles and have worked on small games for the Gameboy, Nintendo DS and the like.
 
-## > showcase
+## > recent projects
 
-{{ showcase }}
+{{ recent_projects }}
 
 ## > recent posts
 
