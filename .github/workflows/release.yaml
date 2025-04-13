@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: main
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Generate site content
+        run: cargo run
+        
+      - name: Deploy site content
+        run: |
+          echo ${{ secrets.DEPLOY_SSH_KEY }} >> deploy_key
+          rsync -av -e "ssh -i deploy_key" build/ deploy@lewis-hou.dev:/var/www/html/home
+    
