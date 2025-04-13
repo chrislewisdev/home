@@ -141,6 +141,9 @@ fn transform(source: DirEntry, dest: PathBuf, stem: String, date: NaiveDate, lay
     let mut subcontext: HashMap<&str, &String> = context.clone();
     subcontext.insert("{{ title }}", &meta.title);
 
+    let date_formatted = date.format("%d %B %C%y").to_string();
+    subcontext.insert("{{ date }}", &date_formatted);
+
     fs::write(dest, render(md, layout, &subcontext)?)?;
     
     Ok(meta)
