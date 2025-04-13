@@ -18,5 +18,5 @@ jobs:
       - name: Deploy site content
         run: |
           echo "${{ secrets.DEPLOY_SSH_KEY }}" >> deploy_key
-          rsync -av -e "ssh -i deploy_key" build/ deploy@lewis-hou.dev:/var/www/html/home
+          rsync -av -e "ssh -o StrictHostKeyChecking=accept-new -i deploy_key" build/ deploy@lewis-hou.dev:/var/www/html/home
     
