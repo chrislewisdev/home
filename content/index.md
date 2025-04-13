@@ -14,4 +14,4 @@ I'm an Australian software developer who loves tech as a craft. I yearn to learn
 
 ## > contact
 
-You're always welcome to get in touch with me by shooting an email at: chris at lewis-hou.dev. :)
+You're always welcome to get in touch with me by shooting an email at: chris at lewis-hou dot dev. :)
