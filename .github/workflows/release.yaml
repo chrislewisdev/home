@@ -1,3 +1,4 @@
+name: Release
 on:
   push:
     branches: main
@@ -13,9 +14,9 @@ jobs:
 
       - name: Generate site content
         run: cargo run
-        
+
       - name: Deploy site content
         run: |
-          echo ${{ secrets.DEPLOY_SSH_KEY }} >> deploy_key
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" >> deploy_key
           rsync -av -e "ssh -i deploy_key" build/ deploy@lewis-hou.dev:/var/www/html/home
     
