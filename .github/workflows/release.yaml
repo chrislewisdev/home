@@ -17,6 +17,6 @@ jobs:
 
       - name: Deploy site content
         run: |
-          echo <<EOF${{ secrets.DEPLOY_SSH_KEY }}EOF >> deploy_key
+          echo <<EOF ${{ secrets.DEPLOY_SSH_KEY }} EOF >> deploy_key
           rsync -av -e "ssh -i deploy_key" build/ deploy@lewis-hou.dev:/var/www/html/home
     
