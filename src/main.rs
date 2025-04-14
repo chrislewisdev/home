@@ -49,6 +49,9 @@ fn generate() -> anyhow::Result<()> {
     copy_files_recursive("assets", PathBuf::from("build/assets"))?;
 
     let layout = fs::read_to_string("content/layout.html")?;
+    let page_layout = layout.replace("{{ body }}", fs::read_to_string("content/page.html")?.as_str());
+    let post_layout = layout.replace("{{ body }}", fs::read_to_string("content/post.html")?.as_str());
+
     let build_path = PathBuf::from("build");
     let mut context: HashMap<&str, &String> = HashMap::new();
     
@@ -61,7 +64,7 @@ fn generate() -> anyhow::Result<()> {
         let post_path = posts_path.join(&stem);
         fs::create_dir_all(&post_path)?;
         
-        posts.push(transform(entry, post_path.join("index.html"), stem, date, &layout, &context)?);
+        posts.push(transform(entry, post_path.join("index.html"), stem, date, &post_layout, &context)?);
     }
 
     posts.sort_by(|a, b| b.date.cmp(&a.date));
@@ -79,7 +82,7 @@ fn generate() -> anyhow::Result<()> {
         let project_path = projects_path.join(&stem);
         fs::create_dir_all(&project_path)?;
         
-        projects.push(transform(entry, project_path.join("index.html"), stem, date, &layout, &context)?);
+        projects.push(transform(entry, project_path.join("index.html"), stem, date, &page_layout, &context)?);
     }
 
     projects.sort_by(|a, b| b.date.cmp(&a.date));
@@ -97,7 +100,7 @@ fn generate() -> anyhow::Result<()> {
         };
         fs::create_dir_all(&page_path)?;
 
-        transform(entry, page_path.join("index.html"), stem, Utc::now().date_naive(), &layout, &context)?;
+        transform(entry, page_path.join("index.html"), stem, Utc::now().date_naive(), &page_layout, &context)?;
     }
 
     Ok(())

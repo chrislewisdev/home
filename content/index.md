@@ -1,3 +1,7 @@
+---
+title = "home"
+---
+
 ## > about
 
 Welcome to my home on the internet. It's hosted on a server inside my actual physical home, so if you're viewing this page right now, it means that all the 1s and 0s comprising this website have just travelled from my house to your device in the matter of an instant. Isn't that neat?
