@@ -91,6 +91,9 @@ fn generate() -> anyhow::Result<()> {
     context.insert("{{ showcase }}", &projects_directory);
     context.insert("{{ recent_projects }}", &recent_projects);
 
+    let time = chrono::Utc::now().format("%Y%m%d%H%M%S").to_string();
+    context.insert("{{ cachebuster }}", &time);
+
     for entry in gather_md("content")? {
         let stem = get_file_stem(&entry)?;
         let page_path = if stem != "index" {
