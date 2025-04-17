@@ -9,22 +9,6 @@ What was wrong with the old setup? Well, I guess it all came down to its relianc
 
 The question naturally follows: what then to use instead of Jekyll? If you've read some of my earlier blog posts, the answer probably isn't surprising: I decided to write my own site generator from scratch. Not the fastest approach, but since there is an abundance of markdown parsing libraries available for many languages, the hardest part - transforming markdown into HTML<sup>[1](#ref-1)</sup> - is already taken care of. What remains is mainly the job of choosing some appropriate conventions for folder structure, page layout etc, and you can have a working site generator in just a couple hundred lines of code. If you like, you can check out the [source code](https://github.com/chrislewisdev/home).
 
-```
-fn render(markdown: &str, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<String> {
-    let parser = Parser::new(markdown);
-    let mut html = String::new();
-    pulldown_cmark::html::push_html(&mut html, parser);
-
-    let mut rendered = layout.clone().replace("{{ content }}", &html);
-
-    for (key, value) in context {
-        rendered = rendered.replace(key, value);
-    }
-
-    Ok(rendered)
-}
-```
-
 My language of choice for this rebuild was [Rust](https://www.rust-lang.org/), which is fast becoming my go-to language for hobby projects. Rust has a steep learning curve, but that's actually part of why I like it - after many years of programming, it's nice to be using a language that stretches my brain muscles in directions they haven't gone before. It grants me the satisfaction of approaching things from a low-level angle while affording many modern conveniences that I want in a language.
 
 ## A change in ethos
