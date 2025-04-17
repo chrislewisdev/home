@@ -54,6 +54,9 @@ fn generate() -> anyhow::Result<()> {
 
     let build_path = PathBuf::from("build");
     let mut context: HashMap<&str, &String> = HashMap::new();
+
+    let time = chrono::Utc::now().format("%Y%m%d%H%M%S").to_string();
+    context.insert("{{ cachebuster }}", &time);
     
     let mut posts: Vec<PageMetadata> = Vec::new();
     let posts_path = build_path.join("posts/");
@@ -90,9 +93,6 @@ fn generate() -> anyhow::Result<()> {
     let recent_projects = generate_short_blog_directory(&projects, "projects", 3);
     context.insert("{{ showcase }}", &projects_directory);
     context.insert("{{ recent_projects }}", &recent_projects);
-
-    let time = chrono::Utc::now().format("%Y%m%d%H%M%S").to_string();
-    context.insert("{{ cachebuster }}", &time);
 
     for entry in gather_md("content")? {
         let stem = get_file_stem(&entry)?;

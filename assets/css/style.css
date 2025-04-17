@@ -132,6 +132,12 @@ img {
     margin: 0 auto 0 auto;
 }
 
+p code {
+    background: #232631;
+    padding: 0 3px 0 3px;
+    font-size: 80%;
+}
+
 .content-body {
     /* text-align: justify; */
 
