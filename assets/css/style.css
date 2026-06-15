@@ -65,6 +65,7 @@ body {
 
     nav {
         margin-top: 20px;
+        text-align: center;
     }
 }
 
@@ -229,5 +230,25 @@ ul, ol {
 
     ul {
         padding-left: 25px;
+    }
+}
+
+.logo-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    row-gap: 10px;
+    text-align: center;
+}
+
+.ascii-logo {
+    font-family: monospace;
+    letter-spacing: -1px;
+    line-height: 90%;
+}
+
+@media screen and (max-width:800px) {
+    .logo-container {
+        display: grid;
+        grid-template-columns: 100%;
     }
 }
