@@ -237,18 +237,33 @@ ul, ol {
     display: grid;
     grid-template-columns: 50% 50%;
     row-gap: 10px;
-    text-align: center;
-}
-
-.ascii-logo {
-    font-family: monospace;
-    letter-spacing: -1px;
-    line-height: 90%;
+    margin-top: 10px;
 }
 
 @media screen and (max-width:800px) {
     .logo-container {
         display: grid;
         grid-template-columns: 100%;
+        text-align: center;
+    }
+}
+
+.ascii-logo {
+    font-family: monospace;
+    letter-spacing: -1px;
+    line-height: 85%;
+}
+.ascii-logo a {
+    text-decoration: none;
+    color: rgb(153, 155, 157);
+    color: var(--text-color);
+}
+
+@media screen and (min-width:801px) {
+    .ascii-logo:nth-child(odd) {
+        text-align: left;
+    }
+    .ascii-logo:nth-child(even) {
+        text-align: right;
     }
 }
