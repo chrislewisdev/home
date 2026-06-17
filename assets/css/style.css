@@ -10,6 +10,9 @@
     --text-color: #BFC7D5;
     --accent-color: #c792ea;
     --accent-secondary-color: #ffcb6b;
+    --palenight-green: #c3e88d;
+    --palenight-red: #ff5572;
+    --palenight-orange: #f78c6c;
 }
 
 @font-face {
@@ -230,4 +233,45 @@ ul, ol {
     ul {
         padding-left: 25px;
     }
+}
+
+.logo-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    row-gap: 10px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+@media screen and (max-width:800px) {
+    .logo-container {
+        display: grid;
+        grid-template-columns: 100%;
+        text-align: center;
+    }
+}
+
+.ascii-logo {
+    font-family: monospace;
+    letter-spacing: -1px;
+    line-height: 85%;
+}
+.ascii-logo a {
+    text-decoration: none;
+}
+
+.ascii-logo:nth-child(2) a {
+    color: var(--palenight-green);
+}
+
+.ascii-logo:nth-child(3) a {
+    color: var(--palenight-red);
+}
+
+.ascii-logo:nth-child(4) a {
+    color: var(--palenight-orange);
+}
+
+.ascii-logo a:hover {
+    color: var(--accent-color);
 }

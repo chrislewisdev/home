@@ -2,20 +2,66 @@
 title = "home"
 ---
 
-## > about
+## about
 
-Welcome to my home on the internet. It's hosted on a server inside my actual physical home, so if you're viewing this page right now, it means that all the 1s and 0s comprising this website have just travelled from my house to your device in the matter of an instant. Isn't that neat?
+I like making digital stuff! Here you can check out some of it :)
 
-I'm an Australian software developer who loves tech as a craft. I yearn to learn more about the entire ecosystem of technology, from distributed cloud architectures to low-level hardware programming. I have a particular fondness for handheld game consoles and have worked on small games for the Gameboy, Nintendo DS and the like.
+<div class="logo-container">
 
-## > recent projects
+<div class="ascii-logo">
+<a href="/blog">
+█████████████████████████████████████████<br/>
+█.......................................█<br/>
+█...........███..█...███.████...........█<br/>
+█...........█..█.█...█.█.█..............█<br/>
+█...........███..█...█.█.█.██...........█<br/>
+█...........█..█.█...█.█.█..█...........█<br/>
+█...........███..███.███.████...........█<br/>
+█.......................................█<br/>
+█████████████████████████████████████████<br/>
+</a>
+</div>
 
-{{ recent_projects }}
+<div class="ascii-logo">
+<a href="https://staticlinkage.itch.io/" target="_blank">
+█████████████████████████████████████████<br/>
+█.......................................█<br/>
+█........████.███.█...█.███.████........█<br/>
+█........█....█.█.██.██.█...█...........█<br/>
+█........█.██.███.█.█.█.███.████........█<br/>
+█........█..█.█.█.█...█.█......█........█<br/>
+█........████.█.█.█...█.███.████........█<br/>
+█.......................................█<br/>
+█████████████████████████████████████████<br/>
+</a>
+</div>
 
-## > recent posts
+<div class="ascii-logo">
+<a href="https://www.twitch.tv/staticlinkage" target="_blank">
+█████████████████████████████████████████<br/>
+█.......................................█<br/>
+█....████.███.███.███.███.█...█.████....█<br/>
+█....█.....█..█.█.█...█.█.██.██.█.......█<br/>
+█....████..█..███.███.███.█.█.█.████....█<br/>
+█.......█..█..██..█...█.█.█...█....█....█<br/>
+█....████..█..█.█.███.█.█.█...█.████....█<br/>
+█.......................................█<br/>
+█████████████████████████████████████████<br/>
+</a>
+</div>
 
-{{ recent_posts }}
+<div class="ascii-logo">
+<a href="https://www.youtube.com/@staticlinkage" target="_blank">
+█████████████████████████████████████████<br/>
+█.......................................█<br/>
+█...........█...█.█.███..████...........█<br/>
+█...........█...█.█.█..█.█..............█<br/>
+█...........█...█.█.█..█.████...........█<br/>
+█............█.█..█.█..█....█...........█<br/>
+█.............█...█.███..████...........█<br/>
+█.......................................█<br/>
+█████████████████████████████████████████<br/>
+</a>
+</div>
 
-## > contact
-
-You're always welcome to get in touch with me by shooting an email at: chris at lewis-hou dot dev. :)
+</div>
