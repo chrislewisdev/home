@@ -20,6 +20,11 @@
     src: url('/assets/fonts/ChakraPetch-Regular.ttf');
 }
 
+@font-face {
+    font-family: "Source Code Pro";
+    src: url('/assets/fonts/SourceCodePro-Regular.ttf');
+}
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -252,9 +257,9 @@ ul, ol {
 }
 
 .ascii-logo {
-    font-family: monospace;
+    font-family: 'Source Code Pro', monospace;
     letter-spacing: -1px;
-    line-height: 85%;
+    line-height: 100%;
 }
 .ascii-logo a {
     text-decoration: none;
