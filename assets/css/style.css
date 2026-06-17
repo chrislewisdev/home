@@ -274,5 +274,4 @@ ul, ol {
 
 .ascii-logo a:hover {
     color: var(--accent-color);
-    transition-property: color 0.5s;
 }
