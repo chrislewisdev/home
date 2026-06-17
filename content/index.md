@@ -4,9 +4,7 @@ title = "home"
 
 ## about
 
-hello
-
-## links
+I like making digital stuff! Here you can check out some of it :)
 
 <div class="logo-container">
 

@@ -10,6 +10,9 @@
     --text-color: #BFC7D5;
     --accent-color: #c792ea;
     --accent-secondary-color: #ffcb6b;
+    --palenight-green: #c3e88d;
+    --palenight-red: #ff5572;
+    --palenight-orange: #f78c6c;
 }
 
 @font-face {
@@ -65,7 +68,6 @@ body {
 
     nav {
         margin-top: 20px;
-        text-align: center;
     }
 }
 
@@ -237,7 +239,8 @@ ul, ol {
     display: grid;
     grid-template-columns: 50% 50%;
     row-gap: 10px;
-    margin-top: 10px;
+    margin-top: 30px;
+    text-align: center;
 }
 
 @media screen and (max-width:800px) {
@@ -255,15 +258,21 @@ ul, ol {
 }
 .ascii-logo a {
     text-decoration: none;
-    color: rgb(153, 155, 157);
-    color: var(--text-color);
 }
 
-@media screen and (min-width:801px) {
-    .ascii-logo:nth-child(odd) {
-        text-align: left;
-    }
-    .ascii-logo:nth-child(even) {
-        text-align: right;
-    }
+.ascii-logo:nth-child(2) a {
+    color: var(--palenight-green);
+}
+
+.ascii-logo:nth-child(3) a {
+    color: var(--palenight-red);
+}
+
+.ascii-logo:nth-child(4) a {
+    color: var(--palenight-orange);
+}
+
+.ascii-logo a:hover {
+    color: var(--accent-color);
+    transition-property: color 0.5s;
 }
