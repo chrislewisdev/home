@@ -4,6 +4,14 @@
     --text-color: #c0caf5;
     --accent-color: #f7768e;
     --accent-secondary-color: #7aa2f7; */
+
+    /*
+    Gameboy theme
+    --background-color: #cada80;
+    --text-color: #2b512b;
+    --accent-color: #0f380f;
+    --accent-secondary-color: #108310;
+    */
     
     /* Palenight */
     --background-color: #292D3E;
@@ -194,7 +202,22 @@ ul, ol {
 
     .container {
         max-width: 95%;
+        position: relative;
     }
+}
+
+.princess {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background-image: url("/assets/images/princess-base.png");
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated; 
+}
+.princess:hover {
+    background-image: url("/assets/images/princess.png");
 }
 
 @media screen and (max-width:700px) {
