@@ -126,11 +126,6 @@ p {
     p {
         margin-top: 0.8rem;
     }
-
-    img {
-        /* max-width: 95%; */
-        /* border: 2px solid black; */
-    }
 }
 
 blockquote {
@@ -271,4 +266,9 @@ ul, ol {
 
 .ascii-logo a:hover {
     color: var(--accent-color);
+}
+
+.ascii-line:hover {
+    position: relative;
+    left: 2px;
 }
