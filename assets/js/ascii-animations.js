@@ -1,6 +1,6 @@
 const xMax = 38;
 const yMax = 6;
-const updateRateMs = 200;
+const updateRateMs = 250;
 
 let animations = [];
 
