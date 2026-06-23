@@ -3,7 +3,7 @@ title = "Book thoughts: Dune Messiah"
 description = "Reflecting on a struggle of a read"
 ---
 
-![Cover illustration for Dune: Messiah](/assets/images/dune-messiah/cover.jpg)
+![Cover illustration for Dune: Messiah](/assets/images/dune-messiah/cover.webp)
 
 Dune: Messiah is a 300-page book that contains about 50 pages of interesting plot development accompanied by 250 pages of wordy analogising and abstract musing.
 
