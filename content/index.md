@@ -4,7 +4,7 @@ title = "home"
 
 ## about
 
-This is your one-stop shop for eveything I make! I'm a programmer first and foremost, but I sometimes dabble in other creative forms. Check out the sections below to explore things I've done 🙂
+This is your one-stop shop for everything I make! I'm a programmer first and foremost, but I sometimes dabble in other creative forms. Check out the sections below to explore things I've done 🙂
 
 <div class="logo-container">
 

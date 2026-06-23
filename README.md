@@ -1,4 +1,4 @@
-This is the source code for my personal website. Check it out at [lewis-hou.dev](https://staticlinkage.dev)!
+This is the source code for my personal website. Check it out at [staticlinkage.dev](https://staticlinkage.dev)!
 
 ## Tech involved
 
