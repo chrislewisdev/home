@@ -115,7 +115,7 @@ With everything tested and working, all I had to do was tweak my existing config
 
 ## Next steps
 
-With the sever up and running, it might be nice to set up some lightweight monitoring to understand how much traffic is coming in and how much CPU load it creates, but as of yet I haven't found anything that I really liked the look of. In a pinch I can just run `top` on the server to see how the CPU is going at any time. It might also be nice to have some kind of uptime monitoring so I can be notified if it ever goes down suddenly.
+With the server up and running, it might be nice to set up some lightweight monitoring to understand how much traffic is coming in and how much CPU load it creates, but as of yet I haven't found anything that I really liked the look of. In a pinch I can just run `top` on the server to see how the CPU is going at any time. It might also be nice to have some kind of uptime monitoring so I can be notified if it ever goes down suddenly.
 
 Moving my site in this fashion has also got me thinking about any cool extras I'd like to add, since now I could build just about anything (static or otherwise) and serve it up under the same umbrella as the main site content. This is still turning over in my head but I did discover the term ["digital garden"](https://maggieappleton.com/garden-history) just today, and it might be nice to incorporate something like that in the future.
 
