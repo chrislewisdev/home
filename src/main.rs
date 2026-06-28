@@ -1,5 +1,10 @@
+mod feed;
+
 use std::{
-    collections::HashMap, env, fs::{self, DirEntry}, path::{Path, PathBuf}
+    collections::HashMap,
+    env,
+    fs::{self, DirEntry},
+    path::{Path, PathBuf},
 };
 
 use anyhow::Context;
@@ -49,15 +54,21 @@ fn generate() -> anyhow::Result<()> {
     copy_files_recursive("assets", PathBuf::from("build/assets"))?;
 
     let layout = fs::read_to_string("content/layout.html")?;
-    let page_layout = layout.replace("{{ body }}", fs::read_to_string("content/page.html")?.as_str());
-    let post_layout = layout.replace("{{ body }}", fs::read_to_string("content/post.html")?.as_str());
+    let page_layout = layout.replace(
+        "{{ body }}",
+        fs::read_to_string("content/page.html")?.as_str(),
+    );
+    let post_layout = layout.replace(
+        "{{ body }}",
+        fs::read_to_string("content/post.html")?.as_str(),
+    );
 
     let build_path = PathBuf::from("build");
     let mut context: HashMap<&str, &String> = HashMap::new();
 
     let time = chrono::Utc::now().format("%Y%m%d%H%M%S").to_string();
     context.insert("{{ cachebuster }}", &time);
-    
+
     let mut posts: Vec<PageMetadata> = Vec::new();
     let posts_path = build_path.join("posts/");
     for entry in gather_md("content/posts")? {
@@ -66,8 +77,15 @@ fn generate() -> anyhow::Result<()> {
         let date = get_post_date(&file_stem)?;
         let post_path = posts_path.join(&stem);
         fs::create_dir_all(&post_path)?;
-        
-        posts.push(transform(entry, post_path.join("index.html"), stem, date, &post_layout, &context)?);
+
+        posts.push(transform(
+            entry,
+            post_path.join("index.html"),
+            stem,
+            date,
+            &post_layout,
+            &context,
+        )?);
     }
 
     posts.sort_by(|a, b| b.date.cmp(&a.date));
@@ -84,8 +102,15 @@ fn generate() -> anyhow::Result<()> {
         let date = get_post_date(&file_stem)?;
         let project_path = projects_path.join(&stem);
         fs::create_dir_all(&project_path)?;
-        
-        projects.push(transform(entry, project_path.join("index.html"), stem, date, &page_layout, &context)?);
+
+        projects.push(transform(
+            entry,
+            project_path.join("index.html"),
+            stem,
+            date,
+            &page_layout,
+            &context,
+        )?);
     }
 
     projects.sort_by(|a, b| b.date.cmp(&a.date));
@@ -103,8 +128,17 @@ fn generate() -> anyhow::Result<()> {
         };
         fs::create_dir_all(&page_path)?;
 
-        transform(entry, page_path.join("index.html"), stem, Utc::now().date_naive(), &page_layout, &context)?;
+        transform(
+            entry,
+            page_path.join("index.html"),
+            stem,
+            Utc::now().date_naive(),
+            &page_layout,
+            &context,
+        )?;
     }
+
+    feed::generate_feed(build_path.join("feed.xml"), &posts)?;
 
     Ok(())
 }
@@ -112,31 +146,57 @@ fn generate() -> anyhow::Result<()> {
 fn get_file_stem(entry: &DirEntry) -> Result<String, anyhow::Error> {
     let path = entry.path();
     let stem = path.file_stem().context("Unable to extract file stem")?;
-    let stem_owned = stem.to_str().map(|s| s.to_string()).context("Unable to extract string from file stem")?;
+    let stem_owned = stem
+        .to_str()
+        .map(|s| s.to_string())
+        .context("Unable to extract string from file stem")?;
 
     Ok(stem_owned)
 }
 
 fn get_post_stem(file_stem: &String) -> Result<String, anyhow::Error> {
-    let stem_trimmed = file_stem.get(11..).context("Unable to trim date from post stem")?;
+    let stem_trimmed = file_stem
+        .get(11..)
+        .context("Unable to trim date from post stem")?;
 
     Ok(stem_trimmed.to_string())
 }
 
 fn get_post_date(file_stem: &String) -> Result<NaiveDate, anyhow::Error> {
-    let date_string = file_stem.get(0..11).context("Unable to extract date from post stem")?;
+    let date_string = file_stem
+        .get(0..11)
+        .context("Unable to extract date from post stem")?;
     let date_parts: Vec<_> = date_string.split("-").collect();
-    let year = date_parts.get(0).context("Missing year in date")?.parse::<i32>()?;
-    let month = date_parts.get(1).context("Missing month in date")?.parse::<u32>()?;
-    let day = date_parts.get(2).context("Missing day in date")?.parse::<u32>()?;
+    let year = date_parts
+        .get(0)
+        .context("Missing year in date")?
+        .parse::<i32>()?;
+    let month = date_parts
+        .get(1)
+        .context("Missing month in date")?
+        .parse::<u32>()?;
+    let day = date_parts
+        .get(2)
+        .context("Missing day in date")?
+        .parse::<u32>()?;
 
     NaiveDate::from_ymd_opt(year, month, day).context("Attempted to create invalid date")
 }
 
-fn transform(source: DirEntry, dest: PathBuf, stem: String, date: NaiveDate, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<PageMetadata> {
+fn transform(
+    source: DirEntry,
+    dest: PathBuf,
+    stem: String,
+    date: NaiveDate,
+    layout: &String,
+    context: &HashMap<&str, &String>,
+) -> anyhow::Result<PageMetadata> {
     let src = fs::read_to_string(source.path())?;
 
-    let (md, front_matter) = extract_metadata(&src).context(format!("Failed to parse metadata for {}\n", source.path().display()))?;
+    let (md, front_matter) = extract_metadata(&src).context(format!(
+        "Failed to parse metadata for {}\n",
+        source.path().display()
+    ))?;
     let meta = PageMetadata {
         stem,
         date,
@@ -151,11 +211,15 @@ fn transform(source: DirEntry, dest: PathBuf, stem: String, date: NaiveDate, lay
     subcontext.insert("{{ date }}", &date_formatted);
 
     fs::write(dest, render(md, layout, &subcontext)?)?;
-    
+
     Ok(meta)
 }
 
-fn render(markdown: &str, layout: &String, context: &HashMap<&str, &String>) -> anyhow::Result<String> {
+fn render(
+    markdown: &str,
+    layout: &String,
+    context: &HashMap<&str, &String>,
+) -> anyhow::Result<String> {
     let parser = Parser::new(markdown);
     let mut html = String::new();
     pulldown_cmark::html::push_html(&mut html, parser);
@@ -185,18 +249,34 @@ fn generate_blog_directory(posts: &Vec<PageMetadata>, base_url: &str) -> String 
         }
 
         let url = format!("/{base_url}/{}", post.stem);
-        output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
+        output.push_str(
+            format!(
+                "<h3><a href=\"{}\">{}</a></h3><p>{}</p>",
+                url, post.title, post.description
+            )
+            .as_str(),
+        );
     }
 
     output
 }
 
-fn generate_short_blog_directory(posts: &Vec<PageMetadata>, base_url: &str, count: usize) -> String {
+fn generate_short_blog_directory(
+    posts: &Vec<PageMetadata>,
+    base_url: &str,
+    count: usize,
+) -> String {
     let mut output = String::new();
 
     for post in posts.iter().take(count) {
         let url = format!("/{base_url}/{}", post.stem);
-        output.push_str(format!("<h3><a href=\"{}\">{}</a></h3><p>{}</p>", url, post.title, post.description).as_str());
+        output.push_str(
+            format!(
+                "<h3><a href=\"{}\">{}</a></h3><p>{}</p>",
+                url, post.title, post.description
+            )
+            .as_str(),
+        );
     }
 
     output
@@ -205,7 +285,7 @@ fn generate_short_blog_directory(posts: &Vec<PageMetadata>, base_url: &str, coun
 fn extract_metadata<'a>(src: &'a str) -> anyhow::Result<(&'a str, FrontMatter)> {
     let default_matter = FrontMatter {
         title: Option::None,
-        description: Option::None
+        description: Option::None,
     };
 
     if !src.starts_with("---") {
@@ -230,9 +310,7 @@ where
 {
     Ok(fs::read_dir(from)?
         .filter_map(|result| result.ok())
-        .filter(|entry| {
-            entry.path().extension().is_some_and(|ext| ext == "md")
-        })
+        .filter(|entry| entry.path().extension().is_some_and(|ext| ext == "md"))
         .collect::<Vec<_>>())
 }
 

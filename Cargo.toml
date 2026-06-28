@@ -7,5 +7,6 @@ edition = "2021"
 anyhow = "1.0.89"
 chrono = "0.4.40"
 pulldown-cmark = "0.12.1"
+quick-xml = { version = "0.40.1", features = ["serialize"] }
 serde = { version = "1.0.218", features = ["derive"] }
 toml = "0.8.20"
